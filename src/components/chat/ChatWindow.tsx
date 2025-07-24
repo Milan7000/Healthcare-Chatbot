@@ -13,11 +13,6 @@ import Header from "@/components/Header";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { MapPin } from "lucide-react";
 
-const placeholderHealthCenters: HealthCenter[] = [
-    { name: "Community Health Clinic", address: "123 Village Road, Rural District", phone: "+1234567890" },
-    { name: "Sunrise Medical Center", address: "456 Town Square, Near City", phone: "+0987654321" },
-];
-
 export default function ChatWindow() {
   const { toast } = useToast();
   const [messages, setMessages] = useState<Message[]>([]);
@@ -62,8 +57,9 @@ export default function ChatWindow() {
     navigator.geolocation.getCurrentPosition(
       (position) => {
         const { latitude, longitude } = position.coords;
-        setLocation(`${latitude}, ${longitude}`);
-        addMessage("system", `Location shared: ${latitude}, ${longitude}`);
+        const newLocation = `${latitude},${longitude}`;
+        setLocation(newLocation);
+        addMessage("system", `Location shared: ${latitude.toFixed(2)}, ${longitude.toFixed(2)}`);
         toast({ title: "Location Shared", description: "Thank you for sharing your location." });
       },
       (error) => {
@@ -71,7 +67,7 @@ export default function ChatWindow() {
         addMessage("system", "User did not share location.");
         toast({
           title: "Location Access Denied",
-          description: "You can still use the app, but health center recommendations will be examples.",
+          description: "You can still use the app, but health center recommendations will not be available.",
           variant: "destructive",
         });
       }
@@ -88,7 +84,7 @@ export default function ChatWindow() {
     setDiagnosisContext(null);
 
     startTransition(async () => {
-      const result = await handleSymptomSubmission(input, language);
+      const result = await handleSymptomSubmission(input, language, location);
 
       if ("error" in result) {
         addMessage("assistant", `Error: ${result.error}`);
@@ -156,19 +152,19 @@ export default function ChatWindow() {
         </div>
       );
       
-      if (riskLevel === "High") {
+      if (result.nearbyHealthCenters && result.nearbyHealthCenters.length > 0) {
         addMessage("assistant", 
             <div>
-                <p className="font-semibold mb-2">Please seek medical attention. Here are some example health centers:</p>
+                <p className="font-semibold mb-2">Based on your location, here are some suggested health centers:</p>
                  <Alert variant="destructive" className="mb-2">
                   <AlertTitle>Disclaimer</AlertTitle>
                   <AlertDescription>
-                    The following are example listings. For medical emergencies, please contact your local emergency services.
+                    These are example listings for demonstration purposes. For medical emergencies, please contact your local emergency services.
                   </AlertDescription>
                 </Alert>
                 <div className="space-y-2">
-                    {placeholderHealthCenters.map((center, index) => (
-                        <HealthCenterCard key={index} center={center} />
+                    {result.nearbyHealthCenters.map((center, index) => (
+                        <HealthCenterCard key={index} center={center as HealthCenter} />
                     ))}
                 </div>
             </div>

@@ -18,4 +18,5 @@ export type HealthCenter = {
   name: string;
   address: string;
   phone: string;
+  specialty?: string;
 };

@@ -1,23 +1,27 @@
 'use server';
 
-import { generatePreliminaryDiagnosis, type GeneratePreliminaryDiagnosisOutput } from '@/ai/flows/generate-preliminary-diagnosis';
+import { generatePreliminaryDiagnosis, type GeneratePreliminaryDiagnosisOutput, type GeneratePreliminaryDiagnosisInput } from '@/ai/flows/generate-preliminary-diagnosis';
 import { generateHealthReport, type GenerateHealthReportInput } from '@/ai/flows/generate-health-report';
 import { analyzeMedicalImage, type AnalyzeMedicalImageInput, type AnalyzeMedicalImageOutput } from '@/ai/flows/analyze-medical-image';
 import { z } from 'zod';
 
 const symptomSchema = z.string().min(10, "Please describe your symptoms in more detail.");
 
-export async function handleSymptomSubmission(symptoms: string, language: string): Promise<GeneratePreliminaryDiagnosisOutput | { error: string }> {
+export async function handleSymptomSubmission(symptoms: string, language: string, location?: string | null): Promise<GeneratePreliminaryDiagnosisOutput | { error: string }> {
   const validation = symptomSchema.safeParse(symptoms);
   if (!validation.success) {
     return { error: validation.error.errors[0].message };
   }
 
   try {
-    const diagnosis = await generatePreliminaryDiagnosis({
+    const input: GeneratePreliminaryDiagnosisInput = {
       symptoms: validation.data,
-      language: language, 
-    });
+      language: language,
+    };
+    if (location) {
+      input.location = location;
+    }
+    const diagnosis = await generatePreliminaryDiagnosis(input);
     return diagnosis;
   } catch (e) {
     console.error(e);
