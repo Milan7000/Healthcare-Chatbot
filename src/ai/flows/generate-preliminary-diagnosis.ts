@@ -18,7 +18,7 @@ const GeneratePreliminaryDiagnosisInputSchema = z.object({
     .describe("The user's symptoms described in their local language."),
   language: z
     .string()
-    .describe('The language in which the symptoms are described.'),
+    .describe('The language in which the symptoms are described (e.g., hindi, tamil).'),
 });
 export type GeneratePreliminaryDiagnosisInput = z.infer<
   typeof GeneratePreliminaryDiagnosisInputSchema
@@ -55,14 +55,14 @@ const generatePreliminaryDiagnosisPrompt = ai.definePrompt({
   output: {schema: GeneratePreliminaryDiagnosisOutputSchema},
   prompt: `You are an AI-powered diagnostic assistant that provides preliminary diagnoses based on user-provided symptoms.
 
-  The user will describe their symptoms in their local language, and you will provide a preliminary diagnosis, a confidence level (0-1), an urgency alert, suggested over-the-counter medicines, and the type of doctor they should consult.
+The user will describe their symptoms in their local language. You will provide a preliminary diagnosis, a confidence level (0-1), an urgency alert, suggested over-the-counter medicines, and the type of doctor they should consult.
 
-  Symptoms: {{{symptoms}}}
-  Language: {{{language}}}
+Symptoms: {{{symptoms}}}
+Language: {{{language}}}
 
-  IMPORTANT: All text-based responses (diagnosis, urgencyAlert, suggestedMedicines, suggestedDoctors) MUST be in the specified 'language'.
+IMPORTANT: All text-based responses (diagnosis, urgencyAlert, suggestedMedicines, suggestedDoctors) MUST be in the SCRIPT of the specified 'language'. For example, if the language is 'hindi', the response must be in Hindi script.
 
-  Respond in valid JSON format.`,
+Respond in valid JSON format.`,
 });
 
 const generatePreliminaryDiagnosisFlow = ai.defineFlow(

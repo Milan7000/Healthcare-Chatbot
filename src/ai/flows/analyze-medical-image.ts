@@ -16,7 +16,7 @@ const AnalyzeMedicalImageInputSchema = z.object({
     .describe(
       "A photo of a medical document (like an X-ray or prescription), as a data URI that must include a MIME type and use Base64 encoding. Expected format: 'data:<mimetype>;base64,<encoded_data>'."
     ),
-  language: z.string().describe('The language for the analysis response.'),
+  language: z.string().describe('The language for the analysis response (e.g., hindi, tamil). The response must be in this language.'),
 });
 export type AnalyzeMedicalImageInput = z.infer<typeof AnalyzeMedicalImageInputSchema>;
 
@@ -37,7 +37,7 @@ const prompt = ai.definePrompt({
 
 Do not provide a diagnosis. Instead, describe what you see in the image and explain any notable findings in simple terms.
 
-Analyze the following image and provide your analysis in {{{language}}}.
+Analyze the following image and provide your analysis IN THE SCRIPT of the requested language: {{{language}}}. For example, if the language is 'hindi', the response must be in Hindi script.
 
 Image: {{media url=photoDataUri}}`,
 });
