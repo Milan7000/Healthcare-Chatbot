@@ -2,11 +2,12 @@
 
 import { generatePreliminaryDiagnosis, type GeneratePreliminaryDiagnosisOutput } from '@/ai/flows/generate-preliminary-diagnosis';
 import { generateHealthReport, type GenerateHealthReportInput } from '@/ai/flows/generate-health-report';
+import { analyzeMedicalImage, type AnalyzeMedicalImageInput, type AnalyzeMedicalImageOutput } from '@/ai/flows/analyze-medical-image';
 import { z } from 'zod';
 
 const symptomSchema = z.string().min(10, "Please describe your symptoms in more detail.");
 
-export async function handleSymptomSubmission(symptoms: string): Promise<GeneratePreliminaryDiagnosisOutput | { error: string }> {
+export async function handleSymptomSubmission(symptoms: string, language: string): Promise<GeneratePreliminaryDiagnosisOutput | { error: string }> {
   const validation = symptomSchema.safeParse(symptoms);
   if (!validation.success) {
     return { error: validation.error.errors[0].message };
@@ -15,7 +16,7 @@ export async function handleSymptomSubmission(symptoms: string): Promise<Generat
   try {
     const diagnosis = await generatePreliminaryDiagnosis({
       symptoms: validation.data,
-      language: 'english', 
+      language: language, 
     });
     return diagnosis;
   } catch (e) {
@@ -31,5 +32,15 @@ export async function handleReportGeneration(context: GenerateHealthReportInput)
   } catch (e) {
     console.error(e);
     return { error: 'There was an error generating the report. Please try again.' };
+  }
+}
+
+export async function handleImageAnalysis(photoDataUri: string, language: string): Promise<AnalyzeMedicalImageOutput | { error: string }> {
+  try {
+    const result = await analyzeMedicalImage({ photoDataUri, language });
+    return result;
+  } catch (e) {
+    console.error(e);
+    return { error: 'There was an error analyzing the image. Please try again.' };
   }
 }

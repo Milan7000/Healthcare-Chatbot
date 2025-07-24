@@ -1,17 +1,19 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { Mic, Send } from "lucide-react";
+import { Mic, Send, Paperclip } from "lucide-react";
 
 type ChatInputProps = {
   onSubmit: (input: string) => void;
+  onFileUpload: (file: File) => void;
   disabled: boolean;
 };
 
-export function ChatInput({ onSubmit, disabled }: ChatInputProps) {
+export function ChatInput({ onSubmit, onFileUpload, disabled }: ChatInputProps) {
   const [input, setInput] = useState("");
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -27,6 +29,17 @@ export function ChatInput({ onSubmit, disabled }: ChatInputProps) {
     }
   };
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      onFileUpload(file);
+    }
+  };
+
+  const handleAttachmentClick = () => {
+    fileInputRef.current?.click();
+  };
+
   return (
     <form onSubmit={handleSubmit} className="flex items-center gap-2">
       <Textarea
@@ -38,6 +51,24 @@ export function ChatInput({ onSubmit, disabled }: ChatInputProps) {
         rows={1}
         disabled={disabled}
       />
+      <input
+        type="file"
+        ref={fileInputRef}
+        onChange={handleFileChange}
+        className="hidden"
+        accept="image/png, image/jpeg, image/webp"
+        disabled={disabled}
+      />
+      <Button
+        type="button"
+        size="icon"
+        variant="secondary"
+        onClick={handleAttachmentClick}
+        disabled={disabled}
+        aria-label="Upload file"
+      >
+        <Paperclip className="h-5 w-5" />
+      </Button>
       <Button
         type="button"
         size="icon"
