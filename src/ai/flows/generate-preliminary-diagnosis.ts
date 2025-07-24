@@ -58,12 +58,7 @@ const generatePreliminaryDiagnosisPrompt = ai.definePrompt({
   Symptoms: {{{symptoms}}}
   Language: {{{language}}}
 
-  Respond in the following format:
-  {
-    "diagnosis": "preliminary diagnosis",
-    "confidenceLevel": 0.8,
-    "urgencyAlert": "Seek a doctor immediately"
-  }`,
+  Respond in valid JSON format.`,
 });
 
 const generatePreliminaryDiagnosisFlow = ai.defineFlow(
