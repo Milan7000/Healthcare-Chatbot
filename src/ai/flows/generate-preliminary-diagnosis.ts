@@ -37,7 +37,7 @@ const GeneratePreliminaryDiagnosisOutputSchema = z.object({
       'An alert indicating the urgency of seeking medical attention (e.g., \'Seek a doctor immediately\') in the specified language.'
     ),
   suggestedMedicines: z.string().describe('Suggested over-the-counter medicines for the symptoms, in the specified language.'),
-  suggestedDoctors: z.string().describe('Types of specialists to consult for the given symptoms (e.g., General Physician, Cardiologist), in the specified language.'),
+  suggestedDoctors: z.string().describe('Types of specialists to consult for the given symptoms (e.g., General Physician, Cardiologist), in the specified language. This should be a type of doctor, not a specific person.'),
 });
 export type GeneratePreliminaryDiagnosisOutput = z.infer<
   typeof GeneratePreliminaryDiagnosisOutputSchema

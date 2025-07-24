@@ -39,7 +39,7 @@ export default function ChatWindow() {
         role: 'assistant',
         content: (
             <div>
-                <p>To provide localized health center recommendations, please share your location.</p>
+                <p>To provide relevant health center recommendations, please share your location.</p>
                 <Button className="mt-2" onClick={requestLocation}>
                     <MapPin className="mr-2 h-4 w-4" />
                     Share Location
@@ -71,7 +71,7 @@ export default function ChatWindow() {
         addMessage("system", "User did not share location.");
         toast({
           title: "Location Access Denied",
-          description: "You can still use the app, but health center recommendations will not be localized.",
+          description: "You can still use the app, but health center recommendations will be examples.",
           variant: "destructive",
         });
       }
@@ -159,7 +159,13 @@ export default function ChatWindow() {
       if (riskLevel === "High") {
         addMessage("assistant", 
             <div>
-                <p className="font-semibold mb-2">Please seek medical attention. {location ? "Here are some nearby centers:" : "Here are some example centers:"}</p>
+                <p className="font-semibold mb-2">Please seek medical attention. Here are some example health centers:</p>
+                 <Alert variant="destructive" className="mb-2">
+                  <AlertTitle>Disclaimer</AlertTitle>
+                  <AlertDescription>
+                    The following are example listings. For medical emergencies, please contact your local emergency services.
+                  </AlertDescription>
+                </Alert>
                 <div className="space-y-2">
                     {placeholderHealthCenters.map((center, index) => (
                         <HealthCenterCard key={index} center={center} />

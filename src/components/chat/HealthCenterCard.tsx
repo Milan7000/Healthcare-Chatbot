@@ -9,23 +9,20 @@ type HealthCenterCardProps = {
 
 export function HealthCenterCard({ center }: HealthCenterCardProps) {
   return (
-    <Card className="w-full">
-      <CardHeader>
-        <CardTitle className="text-base">{center.name}</CardTitle>
+    <Card className="w-full bg-card/50">
+      <CardHeader className="pb-2">
+        <CardTitle className="text-base font-semibold">{center.name}</CardTitle>
       </CardHeader>
-      <CardContent className="text-sm space-y-2">
-        <div className="flex items-center gap-2">
-          <MapPin className="h-4 w-4 text-muted-foreground" />
+      <CardContent className="text-sm space-y-1 pt-0">
+        <div className="flex items-center gap-2 text-muted-foreground">
+          <MapPin className="h-4 w-4" />
           <span>{center.address}</span>
         </div>
-        <div className="flex items-center gap-2">
-          <Phone className="h-4 w-4 text-muted-foreground" />
+        <div className="flex items-center gap-2 text-muted-foreground">
+          <Phone className="h-4 w-4" />
           <span>{center.phone}</span>
         </div>
       </CardContent>
-      <CardFooter>
-        <Button variant="outline" className="w-full">Get Directions</Button>
-      </CardFooter>
     </Card>
   );
 }
