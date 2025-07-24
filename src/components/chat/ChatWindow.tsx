@@ -105,6 +105,8 @@ export default function ChatWindow() {
         diagnosis: result.diagnosis,
         confidenceLevel: result.confidenceLevel,
         urgencyAlert: result.urgencyAlert,
+        suggestedMedicines: result.suggestedMedicines,
+        suggestedDoctors: result.suggestedDoctors,
       };
 
       const diagnosisMessage = (
@@ -113,6 +115,14 @@ export default function ChatWindow() {
           <p><span className="font-medium">Condition:</span> {result.diagnosis}</p>
           <p><span className="font-medium">Confidence:</span> {(result.confidenceLevel * 100).toFixed(0)}%</p>
           <p className="mt-2 px-3 py-1 rounded-full bg-destructive/20 text-destructive-foreground font-bold">{result.urgencyAlert}</p>
+          <div className="mt-4">
+            <p className="font-semibold">Suggested Medicines:</p>
+            <p>{result.suggestedMedicines}</p>
+          </div>
+          <div className="mt-2">
+            <p className="font-semibold">Suggested Doctor:</p>
+            <p>{result.suggestedDoctors}</p>
+          </div>
         </div>
       );
 
@@ -192,7 +202,7 @@ export default function ChatWindow() {
   const generateReport = (context: GenerateHealthReportInput) => {
     startTransition(async () => {
         addMessage("system", "Generating your health report...");
-        const result = await handleReportGeneration(context);
+        const result = await handleReportGeneration({...context, language});
         
         setMessages(prev => prev.filter(m => m.id !== 'thinking' && m.content !== "Generating your health report..."));
 

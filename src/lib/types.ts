@@ -9,6 +9,8 @@ export type Message = {
     diagnosis: string;
     confidenceLevel: number;
     urgencyAlert: string;
+    suggestedMedicines: string;
+    suggestedDoctors: string;
   };
 };
 

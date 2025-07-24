@@ -16,6 +16,7 @@ const GenerateHealthReportInputSchema = z.object({
   diagnosis: z.string().describe('The AI\'s preliminary diagnosis.'),
   riskLevel: z.string().describe('The risk level associated with the diagnosis (e.g., low, medium, high).'),
   recommendation: z.string().describe('A recommendation for seeking medical attention (e.g., see a doctor).'),
+  language: z.string().describe('The language for the report.'),
 });
 export type GenerateHealthReportInput = z.infer<typeof GenerateHealthReportInputSchema>;
 
@@ -39,7 +40,7 @@ Diagnosis: {{{diagnosis}}}
 Risk Level: {{{riskLevel}}}
 Recommendation: {{{recommendation}}}
 
-Generate a concise and easy-to-understand health report summarizing the above information for the patient. The report should include a brief overview of the symptoms, the AI\'s diagnosis, the associated risk level, and the recommendation for seeking medical attention.`,
+Generate a concise and easy-to-understand health report in {{{language}}} summarizing the above information for the patient. The report should include a brief overview of the symptoms, the AI's diagnosis, the associated risk level, and the recommendation for seeking medical attention.`,
 });
 
 const generateHealthReportFlow = ai.defineFlow(

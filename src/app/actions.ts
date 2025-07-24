@@ -25,7 +25,7 @@ export async function handleSymptomSubmission(symptoms: string, language: string
   }
 }
 
-export async function handleReportGeneration(context: GenerateHealthReportInput): Promise<{ report: string } | { error: string }> {
+export async function handleReportGeneration(context: GenerateHealthReportInput & { language: string }): Promise<{ report: string } | { error: string }> {
   try {
     const result = await generateHealthReport(context);
     return result;

@@ -25,7 +25,7 @@ export type GeneratePreliminaryDiagnosisInput = z.infer<
 >;
 
 const GeneratePreliminaryDiagnosisOutputSchema = z.object({
-  diagnosis: z.string().describe('The AI-generated preliminary diagnosis.'),
+  diagnosis: z.string().describe('The AI-generated preliminary diagnosis in the specified language.'),
   confidenceLevel: z
     .number()
     .describe(
@@ -34,8 +34,10 @@ const GeneratePreliminaryDiagnosisOutputSchema = z.object({
   urgencyAlert: z
     .string()
     .describe(
-      'An alert indicating the urgency of seeking medical attention (e.g., \'Seek a doctor immediately\').'
+      'An alert indicating the urgency of seeking medical attention (e.g., \'Seek a doctor immediately\') in the specified language.'
     ),
+  suggestedMedicines: z.string().describe('Suggested over-the-counter medicines for the symptoms, in the specified language.'),
+  suggestedDoctors: z.string().describe('Types of specialists to consult for the given symptoms (e.g., General Physician, Cardiologist), in the specified language.'),
 });
 export type GeneratePreliminaryDiagnosisOutput = z.infer<
   typeof GeneratePreliminaryDiagnosisOutputSchema
@@ -53,10 +55,12 @@ const generatePreliminaryDiagnosisPrompt = ai.definePrompt({
   output: {schema: GeneratePreliminaryDiagnosisOutputSchema},
   prompt: `You are an AI-powered diagnostic assistant that provides preliminary diagnoses based on user-provided symptoms.
 
-  The user will describe their symptoms in their local language, and you will provide a preliminary diagnosis, a confidence level (0-1), and an urgency alert.
+  The user will describe their symptoms in their local language, and you will provide a preliminary diagnosis, a confidence level (0-1), an urgency alert, suggested over-the-counter medicines, and the type of doctor they should consult.
 
   Symptoms: {{{symptoms}}}
   Language: {{{language}}}
+
+  IMPORTANT: All text-based responses (diagnosis, urgencyAlert, suggestedMedicines, suggestedDoctors) MUST be in the specified 'language'.
 
   Respond in valid JSON format.`,
 });
